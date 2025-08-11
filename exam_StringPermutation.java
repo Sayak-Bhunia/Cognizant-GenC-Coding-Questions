@@ -16,57 +16,63 @@ Note:
  output: 2
  */
 
-import java.util.*;
-
-public class exam_StringPermutation {
-    public static void main(String[] args){
-        Scanner sc = new Scanner(System.in);
-        String str = sc.nextLine();
-        int output = func(str);
-        System.out.println(output);
-        sc.close();
+class Main {
+    public static int helper(int n) {
+        int p = 1;
+        for(int i=2;i<=n;i++) p *= i;
+        return p;
     }
-
-    static int func(String str){
-        if(str == null || str.isEmpty()){
-            return 0;
-        }
-        HashSet<Character> vowel = new HashSet<>();
-        vowel.add('a');
-        vowel.add('e');
-        vowel.add('i');
-        vowel.add('o');
-        vowel.add('u');
-        vowel.add('A');
-        vowel.add('E');
-        vowel.add('I');
-        vowel.add('O');
-        vowel.add('U');
-
-        int vcount = 0;
-        int nonVcount = 0;
-        for(char c: str.toCharArray()){
-            if(vowel.contains(c)){
-                vcount++;
-            }else {
-                nonVcount++;
+    public static int permutationsWithVowelsFixed(String s) {
+        int[] v = new int[256];
+        for(char it:"AEIOUaeiou".toCharArray()) v[it] = 1;
+        int[] mp = new int[256];
+        int c = 0;
+        for(char it:s.toCharArray()) {
+            if(v[it] == 0) {
+                mp[it]++;
+                c++;
             }
         }
-        if(vcount == 0){
-            return 0;
-        }
-
-        return factorial(nonVcount);
-    }
-
-    static int factorial(int n){
-        if(n == 0){
-            return 1;
-        }
-        int res = 1;
-        for(int i = 1; i<=n; i++){
-            res = res * i;
+        if(c == 0) return 0;
+        int res = helper(c);
+        for(int it:mp) {
+            if(it>1) res /= helper(it);
         }
         return res;
     }
+    public static void main(String[] args) {
+        System.out.println(permutationsWithVowelsFixed("ABC"));    // Output: 2
+        System.out.println(permutationsWithVowelsFixed("AEIOU"));  // Output: 0
+        System.out.println(permutationsWithVowelsFixed("BANANA")); // Output: 12
+    }
 }
+
+def helper(n):
+    p = 1
+    for i in range(2, n+1, 1):
+        p *= i
+    return p
+
+def permutations_with_vowels_fixed(s):
+    v = [0]*256
+    for i in "AEIOUaeiou":
+        v[ord(i)] = 1
+    mp = [0]*256
+    c = 0
+    for i in s:
+        if v[ord(i)] == 0:
+            mp[ord(i)] += 1
+            c+=1
+    if c == 0:
+        return 0
+    res = helper(c)
+    for i in mp:
+        if i>1:
+            res //= helper(i)
+    return res
+
+# Test cases
+print(permutations_with_vowels_fixed("ABC"))    # Output: 2
+print(permutations_with_vowels_fixed("AEIOU"))  # Output: 0
+print(permutations_with_vowels_fixed("BANANA")) # Output: 12
+
